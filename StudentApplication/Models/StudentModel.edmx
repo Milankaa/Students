@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Test_dbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Kurs">
+          <Key>
+            <PropertyRef Name="ID_kursa" />
+          </Key>
+          <Property Name="ID_kursa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NazivKursa" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Prijava">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="KorisnickoIme" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Sifra" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatusStudenta">
+          <Key>
+            <PropertyRef Name="ID_statusa" />
+          </Key>
+          <Property Name="ID_statusa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NazivStatusa" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Student_id" />
+          </Key>
+          <Property Name="Student_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Prezime" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Godina" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="BrojIndeksa" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="StatusStudenta" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StudentiKursevi">
+          <Key>
+            <PropertyRef Name="ID_studenta" />
+            <PropertyRef Name="ID_kursa" />
+          </Key>
+          <Property Name="ID_studenta" Type="int" Nullable="false" />
+          <Property Name="ID_kursa" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Student_StatusStudenta">
+          <End Role="StatusStudenta" Type="Self.StatusStudenta" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusStudenta">
+              <PropertyRef Name="ID_statusa" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="StatusStudenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentiKursevi_Kurs">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="1" />
+          <End Role="StudentiKursevi" Type="Self.StudentiKursevi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Kurs">
+              <PropertyRef Name="ID_kursa" />
+            </Principal>
+            <Dependent Role="StudentiKursevi">
+              <PropertyRef Name="ID_kursa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentiKursevi_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="StudentiKursevi" Type="Self.StudentiKursevi" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="Student_id" />
+            </Principal>
+            <Dependent Role="StudentiKursevi">
+              <PropertyRef Name="ID_studenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Test_dbModelStoreContainer">
+          <EntitySet Name="Kurs" EntityType="Self.Kurs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Prijava" EntityType="Self.Prijava" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusStudenta" EntityType="Self.StatusStudenta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentiKursevi" EntityType="Self.StudentiKursevi" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Student_StatusStudenta" Association="Self.FK_Student_StatusStudenta">
+            <End Role="StatusStudenta" EntitySet="StatusStudenta" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentiKursevi_Kurs" Association="Self.FK_StudentiKursevi_Kurs">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="StudentiKursevi" EntitySet="StudentiKursevi" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentiKursevi_Student" Association="Self.FK_StudentiKursevi_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="StudentiKursevi" EntitySet="StudentiKursevi" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Test_dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Kurs">
+          <Key>
+            <PropertyRef Name="ID_kursa" />
+          </Key>
+          <Property Name="ID_kursa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NazivKursa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Student" Relationship="Self.StudentiKursevi" FromRole="Kurs" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Prijava">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="Int32" Nullable="false" />
+          <Property Name="KorisnickoIme" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Sifra" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StatusStudenta">
+          <Key>
+            <PropertyRef Name="ID_statusa" />
+          </Key>
+          <Property Name="ID_statusa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NazivStatusa" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_Student_StatusStudenta" FromRole="StatusStudenta" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Student_id" />
+          </Key>
+          <Property Name="Student_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Prezime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Godina" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BrojIndeksa" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StatusStudenta" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="StatusStudenta1" Relationship="Self.FK_Student_StatusStudenta" FromRole="Student" ToRole="StatusStudenta" />
+          <NavigationProperty Name="Kurs" Relationship="Self.StudentiKursevi" FromRole="Student" ToRole="Kurs" />
+        </EntityType>
+        <Association Name="FK_Student_StatusStudenta">
+          <End Role="StatusStudenta" Type="Self.StatusStudenta" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusStudenta">
+              <PropertyRef Name="ID_statusa" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="StatusStudenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="StudentiKursevi">
+          <End Role="Kurs" Type="Self.Kurs" Multiplicity="*" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="Test_dbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Kurs" EntityType="Self.Kurs" />
+          <EntitySet Name="Prijava" EntityType="Self.Prijava" />
+          <EntitySet Name="StatusStudenta" EntityType="Self.StatusStudenta" />
+          <EntitySet Name="Student" EntityType="Self.Student" />
+          <AssociationSet Name="FK_Student_StatusStudenta" Association="Self.FK_Student_StatusStudenta">
+            <End Role="StatusStudenta" EntitySet="StatusStudenta" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+          <AssociationSet Name="StudentiKursevi" Association="Self.StudentiKursevi">
+            <End Role="Kurs" EntitySet="Kurs" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Test_dbModelStoreContainer" CdmEntityContainer="Test_dbEntities">
+          <EntitySetMapping Name="Kurs">
+            <EntityTypeMapping TypeName="Test_dbModel.Kurs">
+              <MappingFragment StoreEntitySet="Kurs">
+                <ScalarProperty Name="ID_kursa" ColumnName="ID_kursa" />
+                <ScalarProperty Name="NazivKursa" ColumnName="NazivKursa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Prijava">
+            <EntityTypeMapping TypeName="Test_dbModel.Prijava">
+              <MappingFragment StoreEntitySet="Prijava">
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="KorisnickoIme" ColumnName="KorisnickoIme" />
+                <ScalarProperty Name="Sifra" ColumnName="Sifra" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusStudenta">
+            <EntityTypeMapping TypeName="Test_dbModel.StatusStudenta">
+              <MappingFragment StoreEntitySet="StatusStudenta">
+                <ScalarProperty Name="ID_statusa" ColumnName="ID_statusa" />
+                <ScalarProperty Name="NazivStatusa" ColumnName="NazivStatusa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Student">
+            <EntityTypeMapping TypeName="Test_dbModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="Student_id" ColumnName="Student_id" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="Godina" ColumnName="Godina" />
+                <ScalarProperty Name="BrojIndeksa" ColumnName="BrojIndeksa" />
+                <ScalarProperty Name="StatusStudenta" ColumnName="StatusStudenta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="StudentiKursevi" TypeName="Test_dbModel.StudentiKursevi" StoreEntitySet="StudentiKursevi">
+            <EndProperty Name="Kurs">
+              <ScalarProperty Name="ID_kursa" ColumnName="ID_kursa" />
+            </EndProperty>
+            <EndProperty Name="Student">
+              <ScalarProperty Name="Student_id" ColumnName="ID_studenta" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
